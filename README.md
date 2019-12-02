@@ -233,3 +233,63 @@
             console.log("run");
         }, 1000);
       ```
+
+3. TypeScript中的类  
+    (1) ES5中的类与继承  
+      ES5中没有专门定义类的方式，而是通过一个函数来实现。可以使用构造函数来声明一个类；可以在构造函数中指定类的属性和方法，也可以在原型在原型链上添加属性和方法，原型链上的属性会被多个实例共享，而构造函数中的则不会；还可以为构造函数指定静态方法，静态方法不属于任何实例，属于构造函数，调用的时候也是使用构造函数对象去调用。  
+      ES5中的继承通常有两种方式：对象冒充继承、原型链继承；对象冒充继承可以继承构造函数中的属性和方法，而不能继承原型链上的属性和方法；原型链继承可以继承构造函数中和原型链上的属性和方法，但是无法从子类项父类传参；所以实际继承操作经常是使用对象冒充继承与原型链继承组合的方式。  
+    (2) TS中类的定义，class关键字
+
+      ``` TypeScript
+        class Person{
+            name: string; // 属性，相比C#等语言前面省去public
+            age: number;
+            constructor(name: string, age: number) {  // 构造函数，实例化类的时候触发的方法,用来初始化属性值
+                this.name = name;
+                this.age = age;
+            }
+            // 方法
+            run(): void {
+                console.log(this.name + "在奔跑！");
+            }
+            getInfo(): void {
+                console.log(`姓名：${this.name}，年龄：${this.age}`);
+            }
+            getName(): string{
+                return this.name;
+            }
+            setName(name: string): void{
+                this.name = name;
+            }
+        }
+        let p: Person = new Person("张三", 29);
+        p.run(); // 张三在奔跑！
+        p.setName('李四');
+        console.log(p.getName()); // 李四
+        p.getInfo(); // 姓名：李四，年龄：29
+      ```  
+
+    (3) TS中类的继承：extends、super关键字  
+
+      ``` TypeScript
+        class Student extends Person{  // 使用extends关键字指定继承的父类
+            grade: number; // 子类新增属性
+            constructor(name: string, age: number, grade: number) {
+                super(name, age); // 通过super关键字调用父类构造函数初始化继承的name、age属性
+                this.grade = grade; // 初始化新增属性
+            }
+            // 新增的方法
+            study() {
+                console.log(`${this.grade}年级的${this.name}在学习！`);
+            }
+            // 重写父类中继承的方法
+            getInfo(): void{
+                console.log(`姓名：${this.name}，年龄：${this.age}，年级：${this.grade}`);
+            }
+        }
+        let s: Student =W new Student("大明", 14, 1);
+        // 调用继承的方法
+        s.run(); // 大明在奔跑！
+        s.study(); // 1年级的大明在学习！
+        s.getInfo(); // 姓名：大明，年龄：14，年级：1
+      ```
