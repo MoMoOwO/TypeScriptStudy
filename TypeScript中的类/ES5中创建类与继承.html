@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+            ES5中没有专门定义类的方式，而是通过一个函数来实现
+        */
+        // 1.最简单的类
+        function Person1(){
+            this.name = "张三";
+            this.age = 20;
+        }
+        var p1 = new Person1();
+        console.log(p1.name); // 张三
+        console.log("-----------");
+
+        // 2.构造函数和原型链里面增加方法
+        function Person2(){
+            this.name = "李四";
+            this.age = 39;
+            this.run = function(){
+                return "在奔跑！";
+            }
+        }
+        // 在原型链上添加属性和方法，原型链上的属性会被多个实例共享，构造函数不会
+        Person2.prototype.gender = "男";
+        Person2.prototype.work = function(){
+            return '在工作';
+        };
+        var p2 = new Person2();
+        console.log(p2.name, p2.run()); // 李四 在奔跑
+        console.log(p2.gender, p2.work()); // 男 在工作
+        console.log("-----------");
+
+        // 3.类里面的静态方法
+        function Person3(){
+            this.name = "王五";
+            this.age = 39;
+            this.run = function(){
+                return '在跑步！';
+            }
+        }
+        // 静态方法，属于类，不属于某个特定的实例
+        Person3.getInfo = function(){
+            console.log("我是静态方法");
+        };
+        // 调用静态方法
+        Person3.getInfo(); // 我是静态方法   静态方法调用是构造函数来调用而不是实例调用
+        console.log("-----------");
+
+        // 4.ES5里面的继承 -- 
+        // 4.1对象冒充继承
+        function Person4(){
+            this.name = "李四";
+            this.age = 39;
+            this.run = function(){
+                return "在奔跑！";
+            }
+        }
+        // 在原型链上添加属性和方法，原型链上的属性会被多个实例共享，构造函数不会
+        Person4.prototype.gender = "男";
+        Person4.prototype.work = function(){
+            return '在工作';
+        };
+        // 定义一个Student类继承自Person4类，
+        // ES5中继承的方法有原型链和对象冒充，用的最多的是原型链与对象冒充的组合。
+        function Student1(){
+            Person4.call(this); // 对象冒充实现继承
+        }
+        var s1 = new Student1();
+        console.log(s1.name, s1.run()); // 李四 在奔跑 对象冒充继承可以继承构造函数中的属性和方法，但是没法继承原型链上的属性和方法
+        console.log(s1.sex); // 男
+
+        // 4.2原型链继承
+        function Student2(){
+            
+        }
+        Student2.prototype = new Person4(); // 原型链实现继承
+        var s2 = new Student2();
+        console.log(s2.name, s2.run()); // 李四 在奔跑 原型链实现继承：可以继承构造函数里面的属性和方法，也可以继承原型链上的属性和方法
+        console.log(s2.gender, s2.work());  // 男 在工作
+
+        // 4.3原型链继承带来的问题
+        function Person5(name, age){
+            this.name = name;
+            this.age = age;
+            this.run = function(){
+                return this.name + "在奔跑！";
+            }
+        }
+        // 在原型链上添加属性和方法，原型链上的属性会被多个实例共享，构造函数里的不会
+        Person5.prototype.gender = "男";
+        Person5.prototype.work = function(){
+            return '在工作';
+        };
+        var p5 = new Person5("张强", 37);
+        console.log(p5.run()); // 张强在奔跑
+        function Student3(name, age){
+            
+        }
+        Student3.prototype = new Person5(); // 原型链实现继承
+        var s3 = new Student3("孙七", 34);
+        console.log(s3.run()); // undefined在奔跑  原型链实现的继承在实例化子类的对象的时候没法给父类传参
+
+        // 4.4原型链+对象冒充组合继承
+        function Person6(name, age){
+            this.name = name;
+            this.age = age;
+            this.run = function(){
+                return this.name + "在奔跑！";
+            }
+        }
+        // 在原型链上添加属性和方法，原型链上的属性会被多个实例共享，构造函数里的不会
+        Person6.prototype.gender = "男";
+        Person6.prototype.work = function(){
+            return '在工作';
+        };
+        var p6 = new Person6("张强", 37);
+        console.log(p6.run()); // 张强在奔跑
+        function Student4(name, age){
+            Person6.call(this, name, age); // 对象冒充继承，可以继承构造函数中的属性和方法，实例化子类可以给父类传参
+        }
+        Student4.prototype = new Person5(); // 原型链实现继承，子类可以继承父类原型链上的属性和方法
+        var s4 = new Student4("孙七", 34);
+        console.log(s4.run()); // 孙七在奔跑 
+
+
+    </script>
+</body>
+</html>
