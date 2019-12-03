@@ -32,14 +32,14 @@
 ## TypeScript入门内容
 
 1. TypeScript中的数据类型  
-    (1)TypeScript中为了是编写的代码更规范，更有利于维护，增加了类型校验(变量声明必须指定类型)，在TypeScript中主要给我们提供了以下的数据类型：布尔类型(boolean)、数字类型(number)、字符串类型(string)、数组类型(array)、元组类型(tuple)、枚举类型(enum)、任意类型(any)、null和undefined、void类型、never类型。增加了类型检验后一般的类型如string、number声明变量后，只能赋值为对应类型的值。  
-    (2) 布尔类型boolean  
+    - TypeScript中为了是编写的代码更规范，更有利于维护，增加了类型校验(变量声明必须指定类型)，在TypeScript中主要给我们提供了以下的数据类型：布尔类型(boolean)、数字类型(number)、字符串类型(string)、数组类型(array)、元组类型(tuple)、枚举类型(enum)、任意类型(any)、null和undefined、void类型、never类型。增加了类型检验后一般的类型如string、number声明变量后，只能赋值为对应类型的值。  
+    - 布尔类型boolean  
       语法：`var flag: boolean = false;`  
-    (3) 数字类型number  
+    - 数字类型number  
       语法：`var num: number = 123;`  
-    (4) 字符串类型string  
+    - 字符串类型string  
       语法：`var str: string = 'abcd';`  
-    (5) 数组类型array  
+    - 数组类型array  
       TS中一般有三种常用的定义数组的方法：  
 
       ``` TypeScript
@@ -51,9 +51,9 @@
         let arr3: any[] = [1, true, 'str'];
       ```
 
-    (6) 元组类型(tuple)，属于数组的一种，使用元组类型可以为数组指定位置规定数据类型  
+    - 元组类型(tuple)，属于数组的一种，使用元组类型可以为数组指定位置规定数据类型  
       语法：`let tup: [number, string] = [1, 'abc'];`  
-    (7) 枚举类型(enum)  
+    - 枚举类型(enum)  
       随着计算机的不断普及，程序不仅只用于数值计算，还更广泛的用于处理非数值的数据。类如：性别、月份、星期几、颜色、单位名、学历、职业等，都不是数值数据。在其他程序设计语言中，一般用一个数值来代表某一状态，这样处理方法不直观，易读性差。如果能在程序中用自然语言中有相应含义的单词来代表某一状态，则程序就很容易圆度和理解。也就是说，事先考虑到某一变量可能取得值，尽量用自然语言中含义清楚的单词来表示它的每一个值，这种方法就称为枚举方法，用这种方法定义的类型称为枚举类型。  
       语法：  
 
@@ -71,9 +71,9 @@
         enum Err { 'undefined' = -1, 'null' = -2, success = 1 };
       ```  
 
-    (8) 任意类型(any)：any类型的变量可以被修改为任意类型  
+    - 任意类型(any)：any类型的变量可以被修改为任意类型  
       语法：`let ss: any = 123;`  
-    (9) null和undefined，是其他类型(never)的子类型  
+    - null和undefined，是其他类型(never)的子类型  
       语法：  
 
       ``` TypeScript
@@ -89,7 +89,7 @@
         console.log(123);
       ```
 
-    (10) void类型：TypeScript中void表示没有任何类型，一般用于定义方法且方法没有返回值的时候  
+    - void类型：TypeScript中void表示没有任何类型，一般用于定义方法且方法没有返回值的时候  
       语法：
 
       ``` TypeScript
@@ -103,7 +103,7 @@
         console.log(foo()); // 123
       ```  
 
-    (11) never类型 其他类型，(包含null和undefined)的子类型，代表从不会的出现的值，这意味着声明never的变量只能被never类型所赋值  
+    - never类型 其他类型，(包含null和undefined)的子类型，代表从不会的出现的值，这意味着声明never的变量只能被never类型所赋值  
       语法：  
 
       ``` TypeScript
@@ -121,81 +121,81 @@
       ```  
 
 2. TypeScript中的函数  
-    (1) TS中定义函数的方法，基本与ES5类似，但是需要在声明方法时指定函数的返回值类型  
-      函数声明法  
+    - TS中定义函数的方法，基本与ES5类似，但是需要在声明方法时指定函数的返回值类型  
+      (1) 函数声明法  
 
-      ``` TypeScript
-        function fun(): string {
-            console.log("fun()");
-            return 'fun()';
-        }
-        // 调用函数
-        console.log(fun());
-      ```
+        ``` TypeScript
+          function fun(): string {
+              console.log("fun()");
+              return 'fun()';
+          }
+          // 调用函数
+          console.log(fun());
+        ```
 
-      匿名函数法  
+      (2) 匿名函数法  
 
-      ``` TypeScript
-        var fun2 = function(): number{
-            console.log('fun2()');
-            return 1;
-        }
-      ```
+        ``` TypeScript
+          var fun2 = function(): number{
+              console.log('fun2()');
+              return 1;
+          }
+        ```
 
-      ts中定义带有参数的方法，参数列表必须指定参数类型，调用函数的时候也必须类型对应  
+      (3) ts中定义带有参数的方法，参数列表必须指定参数类型，调用函数的时候也必须类型对应  
 
-      ``` TypeScript
-        function getInfo(name: string, age: number): string{
-            return `${name} --- ${age}`;
-        }
-      ```
+        ``` TypeScript
+          function getInfo(name: string, age: number): string{
+              return `${name} --- ${age}`;
+          }
+        ```
 
-      定义没有返回值的方法  
+      (4) 定义没有返回值的方法  
 
-      ``` TypeScript
-        function bar(): void {
-            console.log("bar()没有返回值");
-        }
-        bar();
-      ```  
+        ``` TypeScript
+          function bar(): void {
+              console.log("bar()没有返回值");
+          }
+          bar();
+        ```  
 
-    (2) 函数的参数列表  
-      可选参数，在ES5中实参和形参可以不一样，但是在TS中必须一样，如果不一样就需要配置可选参数，方式为在可选择是否传递的参数名后加一个`?`，而且可选参数必须配置到参数列表的最后面。  
+    - 函数的参数列表  
+      (1) 可选参数，在ES5中实参和形参可以不一样，但是在TS中必须一样，如果不一样就需要配置可选参数，方式为在可选择是否传递的参数名后加一个`?`，而且可选参数必须配置到参数列表的最后面。  
 
-      ``` TypeScript
-        function getInfo(name: string, age?: number): string{
-            if (age) {
-                return `${name} ---- ${age}`;
-            } else {
-                return `${name} ---- 年龄保密`;
-            }
-        }
-        console.log(getInfo("张三"));
-      ```  
+        ``` TypeScript
+          function getInfo(name: string, age?: number): string{
+              if (age) {
+                  return `${name} ---- ${age}`;
+              } else {
+                  return `${name} ---- 年龄保密`;
+              }
+          }
+          console.log(getInfo("张三"));
+        ```  
 
-      默认参数，在ES5中没法设置默认参数，在ES6和TS中都可以设置默认参数；调用函数时，可以不为默认参数赋值，这时候将会使用默认参数默认的值，而调用函数时赋值了，则会覆盖默认的值  
+      (2) 默认参数，在ES5中没法设置默认参数，在ES6和TS中都可以设置默认参数；调用函数时，可以不为默认参数赋值，这时候将会使用默认参数默认的值，而调用函数时赋值了，则会覆盖默认的值  
 
-      ``` TypeScript
-        function getInfo3(name: string, age: number = 20):string {
-            return `${name} --- ${age}`;
-        }
-        console.log(getInfo3("李四"));
-      ```  
+        ``` TypeScript
+          function getInfo3(name: string, age: number = 20):string {
+              return `${name} --- ${age}`;
+          }
+          console.log(getInfo3("李四"));
+        ```  
 
-      剩余参数，使用ES6三点运算符来接收不确定个数的形参个数，若参数列表前面有一部分参数，则传参是按顺序为前面的形参赋值，剩余的参数为三点运算符变量赋值。  
+      (3) 剩余参数，使用ES6三点运算符来接收不确定个数的形参个数，若参数列表前面有一部分参数，则传参是按顺序为前面的形参赋值，剩余的参数为三点运算符变量赋值。  
 
-      ``` TypeScript
-        function sum(a: number, ...numbers: number[]): number{
-            let result: number = a;
-            for (let i: number = 0; i < numbers.length; i++){
-                result += numbers[i];
-            }
-            return result;
-        }
-        console.log(sum(1, 2, 3, 4, 5, 6));
-      ```  
+        ``` TypeScript
+          function sum(a: number, ...numbers: number[]): number{
+              let result: number = a;
+              for (let i: number = 0; i < numbers.length; i++){
+                  result += numbers[i];
+              }
+              return result;
+          }
+          console.log(sum(1, 2, 3, 4, 5, 6));
+        ```  
 
-    (3) 函数的重载，Java中函数的重载，是指两个或者两个以上同名函数，但他们的参数不一样，这时会出现函数重载的情况；TypeScript中的重载，通过为同一个函数提供多个函数类型定义来实现多种功能的目的；TS为了兼容ES5和ES6，所以TS中函数重载的写法与Java有区别。  
+    - 函数的重载，Java中函数的重载，是指两个或者两个以上同名函数，但他们的参数不一样，这时会出现函数重载的情况；TypeScript中的重载，通过为同一个函数提供多个函数类型定义来实现多种功能的目的；TS为了兼容ES5和ES6，所以TS中函数重载的写法与Java有区别。  
 
       ``` TypeScript
         // 相同参数个数
@@ -225,7 +225,7 @@
         console.log(getIdInfo("张三", 23));
       ```  
 
-    (4) 箭头函数，与ES6的箭头函数相同  
+    - 箭头函数，与ES6的箭头函数相同  
 
       ``` TypeScript
         // 箭头函数中的this指向上下文
@@ -235,10 +235,10 @@
       ```
 
 3. TypeScript中的类  
-    (1) ES5中的类与继承  
+    - ES5中的类与继承  
       ES5中没有专门定义类的方式，而是通过一个函数来实现。可以使用构造函数来声明一个类；可以在构造函数中指定类的属性和方法，也可以在原型在原型链上添加属性和方法，原型链上的属性会被多个实例共享，而构造函数中的则不会；还可以为构造函数指定静态方法，静态方法不属于任何实例，属于构造函数，调用的时候也是使用构造函数对象去调用。  
       ES5中的继承通常有两种方式：对象冒充继承、原型链继承；对象冒充继承可以继承构造函数中的属性和方法，而不能继承原型链上的属性和方法；原型链继承可以继承构造函数中和原型链上的属性和方法，但是无法从子类项父类传参；所以实际继承操作经常是使用对象冒充继承与原型链继承组合的方式。  
-    (2) TS中类的定义，class关键字
+    - TS中类的定义，class关键字
 
       ``` TypeScript
         class Person{
@@ -269,7 +269,7 @@
         p.getInfo(); // 姓名：李四，年龄：29
       ```  
 
-    (3) TS中类的继承：extends、super关键字  
+    - TS中类的继承：extends、super关键字  
 
       ``` TypeScript
         class Student extends Person{  // 使用extends关键字指定继承的父类
@@ -292,4 +292,70 @@
         s.run(); // 大明在奔跑！
         s.study(); // 1年级的大明在学习！
         s.getInfo(); // 姓名：大明，年龄：14，年级：1
+      ```
+
+    - TS中类的里面的修饰符  
+
+      | 修饰符 | 说明 |
+      | :-- | :-- |
+      | public | 公有的，父类中使用public修饰的属性，在当前类、子类、类外都可以访问 |
+      | protected | 受保护的，父类中使用protected修饰的属性，在当前类和子类中可以访问，在类外不可访问 |
+      | private | 私有的，父类中使用private修饰的属性，在当前类可以访问，在子类和类外不可访问 |  
+
+      若不加修饰符，则默认是public。三个修饰符与高级面向对象语言中的属性修饰符类似。  
+      Demo：  
+
+      ``` TypeScript
+        class Animal{
+            public type: string; // 公有属性
+            protected home: string; // 保护类型
+            private bool: boolean; // 私有类型
+            constructor(type: string, home: string, bool: boolean) {
+                this.type = type;
+                this.home = home;
+                this.bool = bool;
+            }
+            eat() {
+                console.log('吃东西！');
+            }
+            getInfo() {
+                // 在类内部可以访问自身的任何类型的属性
+                console.log(this.type, this.home, this.bool);
+            }
+        }
+        class Dog extends Animal{
+            legs: number;
+            constructor(type: string, home: string, bool: boolean, legs: number) {
+                super(type, home, bool);
+                this.legs = legs;
+            }
+            eat() {
+                console.log("狗啃骨头！");
+            }
+            getHome() {
+                // 在子类中调用父类受保护的属性
+                console.log(this.home);
+            }
+            getBool() {
+                // 在子类中无法访问父类私有属性
+                //console.log(this.bool);
+            }
+        }
+        let d = new Dog("犬科", "人类生活空间", true, 4);
+        // 子类中调用公有属性
+        console.log(d.type);
+        // 在类外使用公用属性
+        let a = new Animal("动物", "地球", false);
+        console.log(a.type);
+
+        // 子类中调用保护属性
+        d.getHome();
+        // 子类的实例无法调用父类受保护的属性
+        //console.log(d1.home);
+        // 父类的实例也无法直接访问受保护的属性，实际上都是外部无法访问受保护的属性
+        //console.log(a.home);
+
+        // 在类外无法访问类的私有属性
+        //console.log(d.bool);
+        //console.log(a.bool);
       ```
