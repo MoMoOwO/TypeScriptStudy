@@ -61,3 +61,64 @@ let s: Student = new Student("大明", 14, 1);
 s.run(); // 大明在奔跑！
 s.study(); // 1年级的大明在学习！
 s.getInfo(); // 姓名：大明，年龄：14，年级：1
+console.log("----------");
+
+// 3.TS中类里面的修饰符：TypeScript类里面定义属性的时候为我们提供了三种修饰符
+/*
+    public：公用类型，在类里面、子类、类外都可以访问
+    protected：保护类型，在类里面、子类可以访问，在类外不可访问
+    private：私有类型，在类里可以访问，在子类和类外都不可访问。
+    属性如果不加修饰符默认public
+*/
+class Animal{
+    public type: string; // 公有属性
+    protected home: string; // 保护类型
+    private bool: boolean; // 私有类型
+    constructor(type: string, home: string, bool: boolean) {
+        this.type = type;
+        this.home = home;
+        this.bool = bool;
+    }
+    eat() {
+        console.log('吃东西！');
+    }
+    getInfo() {
+        // 在类内部可以访问自身的任何类型的属性
+        console.log(this.type, this.home, this.bool);
+    }
+}
+class Dog extends Animal{
+    legs: number;
+    constructor(type: string, home: string, bool: boolean, legs: number) {
+        super(type, home, bool);
+        this.legs = legs;
+    }
+    eat() {
+        console.log("狗啃骨头！");
+    }
+    getHome() {
+        // 在子类中调用父类受保护的属性
+        console.log(this.home);
+    }
+    getBool() {
+        // 在子类中无法访问父类私有属性
+        //console.log(this.bool);
+    }
+}
+let d = new Dog("犬科", "人类生活空间", true, 4);
+// 子类中调用公有属性
+console.log(d.type);
+// 在类外使用公用属性
+let a = new Animal("动物", "地球", false);
+console.log(a.type);
+
+// 子类中调用保护属性
+d.getHome();
+// 子类的实例无法调用父类受保护的属性
+//console.log(d1.home);
+// 父类的实例也无法直接访问受保护的属性，实际上都是外部无法访问受保护的属性
+//console.log(a.home);
+
+// 在类外无法访问类的私有属性
+//console.log(d.bool);
+//console.log(a.bool);
