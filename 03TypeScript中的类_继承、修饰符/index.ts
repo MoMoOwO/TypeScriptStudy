@@ -1,4 +1,4 @@
-// TypeScript中的类
+// TypeScript中的类 继承 关键字
 /*
 // ES5
 function Person(name, age) {
