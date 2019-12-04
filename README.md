@@ -237,125 +237,236 @@
 3. TypeScript中的类  
     - ES5中的类与继承  
       ES5中没有专门定义类的方式，而是通过一个函数来实现。可以使用构造函数来声明一个类；可以在构造函数中指定类的属性和方法，也可以在原型在原型链上添加属性和方法，原型链上的属性会被多个实例共享，而构造函数中的则不会；还可以为构造函数指定静态方法，静态方法不属于任何实例，属于构造函数，调用的时候也是使用构造函数对象去调用。  
-      ES5中的继承通常有两种方式：对象冒充继承、原型链继承；对象冒充继承可以继承构造函数中的属性和方法，而不能继承原型链上的属性和方法；原型链继承可以继承构造函数中和原型链上的属性和方法，但是无法从子类项父类传参；所以实际继承操作经常是使用对象冒充继承与原型链继承组合的方式。  
-    - TS中类的定义，class关键字
+      ES5中的继承通常有两种方式：对象冒充继承、原型链继承；对象冒充继承可以继承构造函数中的属性和方法，而不能继承原型链上的属性和方法；原型链继承可以继承构造函数中和原型链上的属性和方法，但是无法从子类项父类传参；所以实际继承操作经常是使用对象冒充继承与原型链继承组合的方式。
 
-      ``` TypeScript
-        class Person{
-            name: string; // 属性，相比C#等语言前面省去public
-            age: number;
-            constructor(name: string, age: number) {  // 构造函数，实例化类的时候触发的方法,用来初始化属性值
-                this.name = name;
-                this.age = age;
-            }
-            // 方法
-            run(): void {
-                console.log(this.name + "在奔跑！");
-            }
-            getInfo(): void {
-                console.log(`姓名：${this.name}，年龄：${this.age}`);
-            }
-            getName(): string{
-                return this.name;
-            }
-            setName(name: string): void{
-                this.name = name;
-            }
-        }
-        let p: Person = new Person("张三", 29);
-        p.run(); // 张三在奔跑！
-        p.setName('李四');
-        console.log(p.getName()); // 李四
-        p.getInfo(); // 姓名：李四，年龄：29
-      ```  
+    - TS中类的定义，class关键字  
+      (1) TS中与高级面向对象语言类似，使用class关键字来定义一个类。  
+      (2) 示例：
+
+        ``` TypeScript
+          class Person{
+              name: string; // 属性，相比C#等语言前面省去public
+              age: number;
+              constructor(name: string, age: number) {  // 构造函数，实例化类的时候触发的方法,用来初始化属性值
+                  this.name = name;
+                  this.age = age;
+              }
+              // 方法
+              run(): void {
+                  console.log(this.name + "在奔跑！");
+              }
+              getInfo(): void {
+                  console.log(`姓名：${this.name}，年龄：${this.age}`);
+              }
+              getName(): string{
+                  return this.name;
+              }
+              setName(name: string): void{
+                  this.name = name;
+              }
+          }
+          let p: Person = new Person("张三", 29);
+          p.run(); // 张三在奔跑！
+          p.setName('李四');
+          console.log(p.getName()); // 李四
+          p.getInfo(); // 姓名：李四，年龄：29
+        ```  
 
     - TS中类的继承：extends、super关键字  
+      (1) TS中使用extends关键字来实现继承，使用super关键字来调用父类的构造函数进行参数初始化。  
+      (2) 示例：  
 
-      ``` TypeScript
-        class Student extends Person{  // 使用extends关键字指定继承的父类
-            grade: number; // 子类新增属性
-            constructor(name: string, age: number, grade: number) {
-                super(name, age); // 通过super关键字调用父类构造函数初始化继承的name、age属性
-                this.grade = grade; // 初始化新增属性
-            }
-            // 新增的方法
-            study() {
-                console.log(`${this.grade}年级的${this.name}在学习！`);
-            }
-            // 重写父类中继承的方法
-            getInfo(): void{
-                console.log(`姓名：${this.name}，年龄：${this.age}，年级：${this.grade}`);
-            }
-        }
-        let s: Student =W new Student("大明", 14, 1);
-        // 调用继承的方法
-        s.run(); // 大明在奔跑！
-        s.study(); // 1年级的大明在学习！
-        s.getInfo(); // 姓名：大明，年龄：14，年级：1
-      ```
+        ``` TypeScript
+          class Student extends Person{  // 使用extends关键字指定继承的父类
+              grade: number; // 子类新增属性
+              constructor(name: string, age: number, grade: number) {
+                  super(name, age); // 通过super关键字调用父类构造函数初始化继承的name、age属性
+                  this.grade = grade; // 初始化新增属性
+              }
+              // 新增的方法
+              study() {
+                  console.log(`${this.grade}年级的${this.name}在学习！`);
+              }
+              // 重写父类中继承的方法
+              getInfo(): void{
+                  console.log(`姓名：${this.name}，年龄：${this.age}，年级：${this.grade}`);
+              }
+          }
+          let s: Student =W new Student("大明", 14, 1);
+          // 调用继承的方法
+          s.run(); // 大明在奔跑！
+          s.study(); // 1年级的大明在学习！
+          s.getInfo(); // 姓名：大明，年龄：14，年级：1
+        ```
 
     - TS中类的里面的修饰符  
+      (1) 若不加修饰符，则默认是public。三个修饰符与高级面向对象语言中的属性修饰符类似。  
 
-      | 修饰符 | 说明 |
-      | :-- | :-- |
-      | public | 公有的，父类中使用public修饰的属性，在当前类、子类、类外都可以访问 |
-      | protected | 受保护的，父类中使用protected修饰的属性，在当前类和子类中可以访问，在类外不可访问 |
-      | private | 私有的，父类中使用private修饰的属性，在当前类可以访问，在子类和类外不可访问 |  
+        | 修饰符 | 说明 |
+        | :-- | :-- |
+        | public | 公有的，父类中使用public修饰的属性，在当前类、子类、类外都可以访问 |
+        | protected | 受保护的，父类中使用protected修饰的属性，在当前类和子类中可以访问，在类外不可访问 |
+        | private | 私有的，父类中使用private修饰的属性，在当前类可以访问，在子类和类外不可访问 |  
 
-      若不加修饰符，则默认是public。三个修饰符与高级面向对象语言中的属性修饰符类似。  
-      Demo：  
+      (2) 示例：  
 
-      ``` TypeScript
-        class Animal{
-            public type: string; // 公有属性
-            protected home: string; // 保护类型
-            private bool: boolean; // 私有类型
-            constructor(type: string, home: string, bool: boolean) {
-                this.type = type;
-                this.home = home;
-                this.bool = bool;
-            }
-            eat() {
-                console.log('吃东西！');
-            }
-            getInfo() {
-                // 在类内部可以访问自身的任何类型的属性
-                console.log(this.type, this.home, this.bool);
-            }
-        }
-        class Dog extends Animal{
-            legs: number;
-            constructor(type: string, home: string, bool: boolean, legs: number) {
-                super(type, home, bool);
-                this.legs = legs;
-            }
-            eat() {
-                console.log("狗啃骨头！");
-            }
-            getHome() {
-                // 在子类中调用父类受保护的属性
-                console.log(this.home);
-            }
-            getBool() {
-                // 在子类中无法访问父类私有属性
-                //console.log(this.bool);
-            }
-        }
-        let d = new Dog("犬科", "人类生活空间", true, 4);
-        // 子类中调用公有属性
-        console.log(d.type);
-        // 在类外使用公用属性
-        let a = new Animal("动物", "地球", false);
-        console.log(a.type);
+        ``` TypeScript
+          class Animal{
+              public type: string; // 公有属性
+              protected home: string; // 保护类型
+              private bool: boolean; // 私有类型
+              constructor(type: string, home: string, bool: boolean) {
+                  this.type = type;
+                  this.home = home;
+                  this.bool = bool;
+              }
+              eat() {
+                  console.log('吃东西！');
+              }
+              getInfo() {
+                  // 在类内部可以访问自身的任何类型的属性
+                  console.log(this.type, this.home, this.bool);
+              }
+          }
+          class Dog extends Animal{
+              legs: number;
+              constructor(type: string, home: string, bool: boolean, legs: number) {
+                  super(type, home, bool);
+                  this.legs = legs;
+              }
+              eat() {
+                  console.log("狗啃骨头！");
+              }
+              getHome() {
+                  // 在子类中调用父类受保护的属性
+                  console.log(this.home);
+              }
+              getBool() {
+                  // 在子类中无法访问父类私有属性
+                  //console.log(this.bool);
+              }
+          }
+          let d = new Dog("犬科", "人类生活空间", true, 4);
+          // 子类中调用公有属性
+          console.log(d.type);
+          // 在类外使用公用属性
+          let a = new Animal("动物", "地球", false);
+          console.log(a.type);
 
-        // 子类中调用保护属性
-        d.getHome();
-        // 子类的实例无法调用父类受保护的属性
-        //console.log(d1.home);
-        // 父类的实例也无法直接访问受保护的属性，实际上都是外部无法访问受保护的属性
-        //console.log(a.home);
+          // 子类中调用保护属性
+          d.getHome();
+          // 子类的实例无法调用父类受保护的属性
+          //console.log(d1.home);
+          // 父类的实例也无法直接访问受保护的属性，实际上都是外部无法访问受保护的属性
+          //console.log(a.home);
 
-        // 在类外无法访问类的私有属性
-        //console.log(d.bool);
-        //console.log(a.bool);
-      ```
+          // 在类外无法访问类的私有属性
+          //console.log(d.bool);
+          //console.log(a.bool);
+        ```
+
+    - TS中类的静态属性与静态方法，static关键字  
+      (1) 在TS类中使用static修饰的属性和方法分别为静态属性和静态方法，静态属性和静态方法都属于类不属于对象，不能被对象的实例调用，静态方法只能类去调用，静态属性只能在类的静态方法中调用。  
+      (2) 示例：  
+
+        ``` TypeScript
+          class Person{
+              // 实例属性
+              name: string;
+              // 使用static关键字修饰的属性为静态属性
+              static age: number = 20;
+              constructor(name: string) {
+                  this.name = name;
+                  //this.age = age;
+              }
+              // 实例方法
+              run() {
+                  console.log('在跑步！');
+              }
+              // 使用static关键字修饰的方法为静态方法
+              static work() {
+                  console.log('在工作！');
+                  console.log(this.age); // 静态方法里只能调用静态属性，静态属性只能在类内的静态方法中调用
+              }
+          }
+          let p = new Person("张三");
+          p.run(); // 调用实例方法
+          Person.work(); // 调用静态方法
+        ```
+
+    - TS中类的多态：  
+      (1) 多态：父类定义一个方法不去实现，让继承他的子类去实现，每一个子类有不同的实现 多态也是继承的一种表现。  
+      (2) 示例：  
+
+        ``` TypeScript
+          class Animal{
+              type: string;
+              constructor(type: string) {
+                  this.type = type;
+              }
+              eat() { // 父类定义方法，不实现
+              }
+          }
+          class Dog extends Animal{
+              constructor(type: string) {
+                  super(type);
+              }
+              eat() { // 子类实现父类定义了未实现的方法
+                  console.log('狗啃骨头！');
+              }
+          }
+          class Cat extends Animal{
+              constructor(type: string) {
+                  super(type);
+              }
+              eat() { // 不同的子类可以有不同的实现
+                  console.log('猫吃鱼！');
+              }
+          }
+          let dog: Dog = new Dog("犬科");
+          dog.eat();
+          let cat: Cat = new Cat("猫科");
+          cat.eat();
+        ```
+
+    - TS中的抽象类  
+      (1) 抽象类：TS中的抽象类，是提供其他类继承的基类，不能直接被实例化；用abstract关键字定义抽象类和抽象方法，抽象类中的抽象方法不包含具体实现并且必须都在派生类中实现；abstract抽象方法只能放到抽象类里面；抽象类和抽象方法用来定义标准。  
+      (2) 示例：
+
+        ``` TypeScript
+          abstract class Camera{  // 抽象类
+              type: string;
+              constructor(type: string) {
+                  this.type = type;
+              }
+              abstract takePhoto(): any; // 抽象方法
+              fun() {
+                  console.log('其他方法在子类中不必实现！');
+              }
+          }
+          //let c = new Camera(); // 抽象类不能直接实例化
+          class DigitalCamera extends Camera{
+              constructor(type: any) {
+                  super(type)
+              }
+              takePhoto() { // 抽象类的子类必须实现抽象类中的抽象方法
+                  console.log(this.type + '拍了一张数字照片！');
+              }
+          }
+          class FileCamera extends Camera{
+              constructor(type: any) {
+                  super(type)
+              }
+              takePhoto() {
+                  console.log(this.type + '拍了一张黑白照片！');
+              }
+              getType() {
+                  console.log(this.type);
+              }
+          }
+
+          let dc: DigitalCamera = new DigitalCamera("数字相机");
+          dc.takePhoto();
+          let fc: FileCamera = new FileCamera("数字相机");
+          fc.takePhoto();
+        ```
