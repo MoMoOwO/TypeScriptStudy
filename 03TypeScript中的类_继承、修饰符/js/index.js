@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-// TypeScript中的类
+// TypeScript中的类 继承 关键字
 /*
 // ES5
 function Person(name, age) {
