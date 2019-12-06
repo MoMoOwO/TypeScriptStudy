@@ -523,3 +523,30 @@
           }
           SayHello({ name: '张三' }); // 不传递可选属性
         ```
+
+    - 函数类型接口，对函数传入的参数以及返回的值进行约束。  
+      (1) 示例：  
+
+      ``` TypeScript
+        // 实现一个加密的函数类型接口
+        interface encrypt{
+            // 括号内为参数列表的类型约束，后面为返回值类型的约束
+            (key: string, value: number): string;
+        }
+
+        let md5: encrypt = function (key: string, value: number): string{
+            // 模拟加密操作
+            return key + value;
+        }
+        console.log(md5("xyz", 123));
+      ```  
+
+      (2) 函数类型接口也可以批量实在在不同的函数中  
+
+        ``` TypeScript
+          // 批量约束不同的方法
+          let sha1: encrypt = function (key: string, value: number): string{
+              return `${key}---${value}`;
+          }
+          console.log(sha1("李四", 432));
+        ```
