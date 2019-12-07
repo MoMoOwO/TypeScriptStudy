@@ -550,3 +550,115 @@
           }
           console.log(sha1("李四", 432));
         ```
+
+    - 可索引接口，对数组和对象进行约束，不常用  
+      示例：  
+
+      ``` TypeScript
+        // 对数组的约束
+        interface UserArr{
+            [index: number]: string;
+        }
+        let arr: UserArr = ["abc", "de", "f"]; // 数组索引就是数值型，数组值需要满足约束为字符串型
+        console.log(arr);
+        console.log(arr[0]);
+
+        // 对象的约束
+        interface UserObject{
+            [index: string]: string;
+        }
+        let obj: UserObject = {
+            name: "张三", // 对象要满足约束，键(index)为string，值为string
+            age: "23"
+        }
+        console.log(obj);
+      ```  
+
+    - 类类型接口，对类进行约束，类类型接口的实现一般变量的事项方式不同需要使用implements关键字。  
+      示例：  
+
+      ``` TypeScript
+        // 定义一个类接口
+        interface Animal{
+            type: string;
+            eat(str: string): void;
+        }
+        // 使用implements关键字来表示一个类实现某一个类接口，需要实现类接口中的所有属性和方法
+        class Dog implements Animal{
+            type: string;
+            constructor(type: string) {
+                this.type = type;
+            }
+
+            eat() {
+                console.log(this.type + "啃骨头！");
+            }
+        }
+        let d = new Dog("狗");
+        d.eat();
+
+        class Cat implements Animal{
+            type: string;
+            constructor(type: string) {
+                this.type = type;
+            }
+            eat(str: string) {
+                console.log(this.type + "吃" + str + "！");
+            }
+        }
+        let c = new Cat("猫");
+        c.eat("鱼");
+      ```  
+
+    - 接口的扩展-继承，TS中的接口可以像类一样使用extends关键字进行接口的继承  
+      (1) 示例：  
+
+        ``` TypeScript
+          // ts中接口的扩展就是接口可以像类一样继承
+          interface Animal{
+              type: string
+              eat(foot: string): void;
+          }
+          // Person接口通过extends关键字继承Animal接口
+          interface Person extends Animal{
+              work(): void;
+          }
+          class Workers implements Person{
+              type: string;
+              constructor(type: string) {
+                  this.type = type;
+              }
+              eat(foot: string) {
+                  console.log(this.type + "吃" + foot + "！");
+              }
+              work() {
+                  console.log(this.type + "工作！");
+              }
+          }
+          let w = new Workers("工人");
+          w.eat("员工餐厅");
+          w.work();
+          console.log("--------");
+        ```  
+
+      (2) TS中的类可以在继承父类的同时实现某一个接口  
+
+        ``` TypeScript
+          // 类可以同时继承父类又实现接口
+          class Programmer extends Workers implements Person{
+              constructor(type: string) {
+                  super(type);
+              }
+              eat(foot: string) {
+                  console.log(this.type + "吃" + foot + "！");
+              }
+              work() {
+                  console.log(this.type + "工作！");
+              }
+              Coding() {
+                  console.log(this.type + "写代码！");
+              }
+          }
+          let pro = new Programmer("程序员");
+          pro.Coding();
+        ```
