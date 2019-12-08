@@ -662,3 +662,65 @@
           let pro = new Programmer("程序员");
           pro.Coding();
         ```
+
+5. TypeScript中的泛型
+    - 泛型的定义：软件工程中，我们不仅要创建一致的定义良好的API，同时也要考虑可重用性。组件不仅能够支持当前的数据类型，同时也能支持未来的数据类型，这在创建大型系统时为你提供了十分灵活的功能。在像C#和Java这样的语言中，可以使用泛型来创建可重用的组件，一个组件可以支持多种类型的数据，这样用户就可以以自己的数据类型来使用组件。通俗理解，反省就是解决类、接口、方法的复用性，以及对不特定数据类型的支持(数据类型校验)。  
+    - 函数中的泛型变量：  
+      (1) 有时候我们需要函数的传入参数类型与返回值类型相同，这时候若为每个不同类型声明一个函数，则产生了代码冗余，使用any类型虽然能减少代码冗余，但是失去了变量的类型校验，而且还可以传入类型与返回类型不一致，所以我们需要使用泛型变量。使用方式为：在声明函数时在参数列表前加上`<T>`，T就表示泛型，具体是什么类型是在调用这个函数是决定的。  
+      (2) 实例：  
+
+      ``` TypeScript
+        function getData<T>(value: T): T{
+            return (value);
+        }
+        console.log(getData<number>(123)); // 指定泛型为数值型：传入参数和返回值都为number类型
+        console.log(getData<boolean>(true)); // 指定泛型为布尔型：传入参数和返回值都为boolean类型
+      ```
+
+      泛型可以之单独制定传入参数类型，但是不能单独制定返回值类型  
+
+      ``` TypeScript
+        function getInfo1<T>(name: T, age: number): any {
+            return {
+                name,
+                age
+            }
+        }
+        console.log(getInfo1<string>("张三", 39));
+        /* function getInfo2<T>(name: string, age: number): T{
+            return `${name}, ${age}`; // 报错
+        } */
+      ```
+
+    - 泛型类(类的泛型)  
+      (1) 指定泛型类只需要在类名后添加`<T>`，在类内需要定义为泛型的变量使用T即可，类型的确定是在实例化类的对象的时候决定的。
+      需求：有个最小堆算法，需要同时支持返回数字和字母(A-Z)两种类型，通过类的泛型来实现。  
+
+      ``` TypeScript
+        class CMin<T>{
+            list: T[] = [];
+            add(value: T): void{
+                this.list.push(value);
+            }
+            findMin(): T{
+                let min = this.list[0];
+                for (let i: number = 0; i < this.list.length; i++){
+                    this.list[i] < min ? (min = this.list[i]) : (min = min);
+                }
+                return min;
+            }
+        }
+        let charArr: CMin<string> = new CMin(); // 实例化一个实例并指定泛型类型
+        charArr.add("A");
+        charArr.add("Z");
+        charArr.add("T");
+        charArr.add("D");
+        console.log(charArr.findMin());
+
+        let numArr: CMin<number> = new CMin();
+        numArr.add(123);
+        numArr.add(234);
+        numArr.add(342);
+        numArr.add(432);
+        console.log(numArr.findMin());
+      ```
