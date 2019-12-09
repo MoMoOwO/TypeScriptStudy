@@ -669,58 +669,142 @@
       (1) 有时候我们需要函数的传入参数类型与返回值类型相同，这时候若为每个不同类型声明一个函数，则产生了代码冗余，使用any类型虽然能减少代码冗余，但是失去了变量的类型校验，而且还可以传入类型与返回类型不一致，所以我们需要使用泛型变量。使用方式为：在声明函数时在参数列表前加上`<T>`，T就表示泛型，具体是什么类型是在调用这个函数是决定的。  
       (2) 实例：  
 
-      ``` TypeScript
-        function getData<T>(value: T): T{
-            return (value);
-        }
-        console.log(getData<number>(123)); // 指定泛型为数值型：传入参数和返回值都为number类型
-        console.log(getData<boolean>(true)); // 指定泛型为布尔型：传入参数和返回值都为boolean类型
-      ```
+        ``` TypeScript
+          function getData<T>(value: T): T{
+              return (value);
+          }
+          console.log(getData<number>(123)); // 指定泛型为数值型：传入参数和返回值都为number类型
+          console.log(getData<boolean>(true)); // 指定泛型为布尔型：传入参数和返回值都为boolean类型
+        ```
 
       泛型可以之单独制定传入参数类型，但是不能单独制定返回值类型  
 
-      ``` TypeScript
-        function getInfo1<T>(name: T, age: number): any {
-            return {
-                name,
-                age
-            }
-        }
-        console.log(getInfo1<string>("张三", 39));
-        /* function getInfo2<T>(name: string, age: number): T{
-            return `${name}, ${age}`; // 报错
-        } */
-      ```
+        ``` TypeScript
+          function getInfo1<T>(name: T, age: number): any {
+              return {
+                  name,
+                  age
+              }
+          }
+          console.log(getInfo1<string>("张三", 39));
+          /* function getInfo2<T>(name: string, age: number): T{
+              return `${name}, ${age}`; // 报错
+          } */
+        ```
 
     - 泛型类(类的泛型)  
       (1) 指定泛型类只需要在类名后添加`<T>`，在类内需要定义为泛型的变量使用T即可，类型的确定是在实例化类的对象的时候决定的。
       需求：有个最小堆算法，需要同时支持返回数字和字母(A-Z)两种类型，通过类的泛型来实现。  
 
+        ``` TypeScript
+          class CMin<T>{
+              list: T[] = [];
+              add(value: T): void{
+                  this.list.push(value);
+              }
+              findMin(): T{
+                  let min = this.list[0];
+                  for (let i: number = 0; i < this.list.length; i++){
+                      this.list[i] < min ? (min = this.list[i]) : (min = min);
+                  }
+                  return min;
+              }
+          }
+          let charArr: CMin<string> = new CMin(); // 实例化一个实例并指定泛型类型
+          charArr.add("A");
+          charArr.add("Z");
+          charArr.add("T");
+          charArr.add("D");
+          console.log(charArr.findMin());
+
+          let numArr: CMin<number> = new CMin();
+          numArr.add(123);
+          numArr.add(234);
+          numArr.add(342);
+          numArr.add(432);
+          console.log(numArr.findMin());
+        ```
+
+    - 泛型接口  
+      (1) 方式一：定义函数类型接口时，在函数的约束前使用`<T>`声明泛型，之后便可以使用泛型T，本质上是函数泛型(泛型变量)实现的；此方式声明的泛型接口，泛型的确定实在调用实现函数泛型接口的函数时确定的。  
+
       ``` TypeScript
-        class CMin<T>{
-            list: T[] = [];
-            add(value: T): void{
-                this.list.push(value);
-            }
-            findMin(): T{
-                let min = this.list[0];
-                for (let i: number = 0; i < this.list.length; i++){
-                    this.list[i] < min ? (min = this.list[i]) : (min = min);
-                }
-                return min;
+        // 泛型接口-方式1
+        interface Config{
+            // 定义函数类型接口时，需要在函数的约束前使用<T>声明泛型，接下来便可以使用泛型T
+            <T>(value: T): T;
+        }
+        // 使用函数泛型接口初始化一个函数
+        let getData: Config = function <T>(value: T): T{
+            return value;
+        }
+        // 函数泛型接口，泛型的确定是在调用实现函数泛型接口的函数的时候确定的
+        console.log(getData<string>("哈哈！"));
+      ```  
+
+    (2) 方式二：声明泛型接口时在接口名后跟`<T>`声明泛型，之后便可以使用泛型T；这种方式实现的泛型接口，泛型的确定是在定义实现该接口的函数时指定的。  
+
+      ``` TypeScript
+        // 泛型接口-方式2
+        // 第二种实现泛型接口的方式是在声明接口名后跟<T>来指定泛型T
+        interface Model<T>{
+            (value: T): T;
+        }
+        // 使用这种方式实现的泛型接口，泛型在函数声明时确定泛型的类型
+        let getInfo: Model<string> = function (value: string): string{
+            return value;
+        }
+        console.log(getInfo("嘻嘻！"));
+      ```
+
+    - 泛型类，把类作为参数类型的泛型类  
+      假设现在又一个需求：两个不同的类影射了数据库种不同的表的字段，定义一个数据库的操作类，封装了对数据库的不同操作；我们要求定义一个add方法就能往这两张不同的表中添加数据。这就需要把类作为参数类型，但是如果单一指定一中类类型时不行的，这又要借助泛型来解决。  
+
+      ``` TypeScript
+        // 把类作为参数来约束数据传入的类型
+        // 定义一个Goods类，对数据库进行映射
+        class Goods{
+            id: number | undefined;
+            name: string | undefined;
+            amount: number | undefined;
+        }
+        // 定义一个Animal类，对数据库进行映射
+        class Animal{
+            type: string | undefined;
+            size: string | undefined;
+            home: string | undefined;
+            constructor(params: {
+                type: string | undefined,
+                size: string | undefined,
+                home: string | undefined
+            }) {
+                this.type = params.type;
+                this.size = params.size;
+                this.home = params.home;
             }
         }
-        let charArr: CMin<string> = new CMin(); // 实例化一个实例并指定泛型类型
-        charArr.add("A");
-        charArr.add("Z");
-        charArr.add("T");
-        charArr.add("D");
-        console.log(charArr.findMin());
+        class Database<T>{
+            add(table: T): boolean{
+                console.log(table);
+                return true;
+            }
+            update(table: T): boolean{
+                console.log(table);
+                return true;
+            }
+        }
+        // 创建Goods实例对象并添加到数据库
+        let go = new Goods();
+        go.id = 12;
+        go.name = "酸奶";
+        go.amount = 123;
+        let DBs = new Database<Goods>(); // 声明数据库对象并指定泛型类型
+        DBs.add(go);
 
-        let numArr: CMin<number> = new CMin();
-        numArr.add(123);
-        numArr.add(234);
-        numArr.add(342);
-        numArr.add(432);
-        console.log(numArr.findMin());
+        // 创建Animal对象添加到数据库
+        let an = new Animal({ type: "犬科", size: "中等", home: "陆地生活环境"});
+        let DBss = new Database<Animal>();
+        DBss.add(an);
+        // 更新数据库Animal
+        DBss.update(an);
       ```
