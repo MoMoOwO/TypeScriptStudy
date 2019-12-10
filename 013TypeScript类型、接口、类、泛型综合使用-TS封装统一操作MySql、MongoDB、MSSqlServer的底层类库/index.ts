@@ -12,7 +12,7 @@ interface DBI<T>{
     add(info: T): boolean;
     update(info: T, id: number): boolean;
     delete(id: number): boolean;
-    get(id: number): any;
+    get(id: number): any[];
 }
 
 // 定义一个操作MySql数据库的类   注意要实现泛型接口，这个类也应该是一个泛型类
@@ -53,7 +53,7 @@ class MSSQlDB<T> implements DBI<T> {
     delete(id: number): boolean {
         throw new Error("Method not implemented.");
     }
-    get(id: number) {
+    get(id: number): any[] {
         let list = [
             {
                 title: "xxx" + id,
