@@ -808,3 +808,151 @@
         // 更新数据库Animal
         DBss.update(an);
       ```
+
+6. TypeScript中的模块与命名空间
+    - 术语：关于术语的一点说明：请务必注意一点，TypeScript1.5里术语名已经发生了变化。“内部模块”现在称为“命名空间”，“外部模块”现在简称为“模块”，模块在其自身的作用域里执行，而不是在全局作用域里。这意味着定义在一个模块里的变量、函数、类等等在模块外部时不可见的，除非你明确的使用export形式之一导出它们。相反，如果想使用其他模块导出变量、函数、类、接口等的时候，你必须要导入它们，可以使用import形式之一。  
+    - 模块的概念(理解)：我们可以把一些公共的功能单独抽离成一个文件作为一个模块。模块里面的变量、函数、类等默认是私有的如果我们要在外部访问模块里的数据(变量、函数、类)，我们需要通过export暴漏模块里面的数据(变量、函数、类)。暴漏后我们通过import引入模块就可以使用模块里面暴漏的数据(变量、函数、类)。  
+    - 模块导出(暴漏)的方式：  
+      (1) 方式1：通过export关键字逐一导出。  
+
+        ``` TypeScript
+          // 单独暴漏 -- 在每个要暴漏的变量、类、函数前加关键字export
+          export let dbUrl = "localhost:27017";
+
+          // 使用export将方法暴漏出去
+          export function getData(): any[] {
+              console.log("获取数据库的数据111");
+              return [
+                  {
+                      title: '标题1',
+                      content: '内容1'
+                  },
+                  {
+                      title: '标题2',
+                      content: '内容2'
+                  }
+              ]
+          }
+        ```  
+
+      (2) 方式2：通过export关键字将要暴漏的数据以对象的形式一次性暴漏。  
+
+        ``` TypeScript
+          // 以对象的形式，一次性暴漏
+          let DBUrl = "http://xxxx";
+
+          // 使用export将方法暴漏出去
+          function getAllData(): any[] {
+              console.log("获取数据库的数据111");
+              return [
+                  {
+                      title: '标题1-哈哈',
+                      content: '内容1-呵呵'
+                  },
+                  {
+                      title: '标题2-哈哈',
+                      content: '内容2-呵呵'
+                  }
+              ]
+          }
+          function saveOneData(data: any[]): boolean{
+              console.log(data);
+              return true;
+          }
+          // 以对象的形式，导出需要导出的数据
+          export { DBUrl, getAllData, saveOneData };
+        ```  
+
+      (3) 方式3：通过export关键字和default关键字来进行默认暴漏，每个模块都有一个且只能有一个默认导出。  
+
+        ``` TypeScript
+          // export default默认导出：每个模块可以有一个default导出。默认导出使用default关键字标记；
+          // 并且一个模块只能够有一个default导出。需要使用一种特殊的导入形式
+          function sayHello(): void{
+              console.log("Hello Modules！");
+          }
+          export default sayHello;
+        ```  
+
+    - 命名空间：在代码量较大的情况下，为了避免各种变量命名之间的冲突，可将相似功能的函数、类、接口等放置到命名空间内。同Java包，.Net命名空间一样，TypeScript的命名空间可以将代码包裹起来，只对外暴漏需要在外部访问的对象。命名空间内的对象通过export来暴漏数据。  
+      (1) 定义命名空间使用namspace关键字，在使用命名空间内的数据时，需要使用`命名空间.数据名`的形式。  
+
+        ``` TypeScript
+          // 定义命名空间A
+          namespace A{
+              // 定义一个接口
+              interface Animal{
+                  type: string;
+                  eat(): void;
+              }
+              // 定义两个类实现该接口    命名空间中的数据使用export关键自暴漏
+              export class Dog implements Animal{
+                  type: string;
+                  constructor(type: string) {
+                      this.type = type;
+                  }
+                  eat():void {
+                      console.log("狗啃骨头！");
+                  }
+              }
+              export class Cat implements Animal{
+                  type: string;
+                  constructor(type: string) {
+                      this.type = type;
+                  }
+                  eat(): void {
+                      console.log("猫吃鱼！");
+                  }
+              }
+          }
+          // 定义命名空间B,不同的命名空间内可以使用相同的变量名
+          namespace B{
+              // 定义一个接口
+              interface Animal{
+                  type: string;
+                  eat(): void;
+              }
+              // 定义两个类实现该接口
+              export class Dog implements Animal{
+                  type: string;
+                  constructor(type: string) {
+                      this.type = type;
+                  }
+                  eat():void {
+                      console.log("狗啃骨头！");
+                  }
+              }
+              export class Cat implements Animal{
+                  type: string;
+                  constructor(type: string) {
+                      this.type = type;
+                  }
+                  eat(): void {
+                      console.log("猫吃鱼！");
+                  }
+              }
+          }
+          // 在使用命名空间的时候需要使用命名空间.变量名的形式来使用命名空间中的数据
+          let dog = new A.Dog("犬科");
+          dog.eat();
+          let cat = new B.Cat("猫科");
+          cat.eat();
+        ```  
+
+      (2) 还可以将命名空间抽离到外面的模块里，使用的时候需要先引入模块。
+
+        ``` TypeScript
+          // ./modules/module.ts
+          export namespace C{
+              export let a: string = "我在命名空间C里！";
+          }
+          export namespace D{
+              export let a: string = "我在命名空间D里！";
+          }
+          // index.ts
+          import { C, D } from "./modules/module";
+          console.log(C.a);
+          console.log(D.a);
+        ```  
+
+    - 命名空间和模块的区别：命名空间：内部模块，主要用于组织代码，避免命名冲突。模块：ts的外部模块的简称，侧重代码的复用，一个模块里可能会有多个命名空间。
