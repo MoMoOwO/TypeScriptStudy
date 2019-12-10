@@ -43,7 +43,7 @@ class User{
     passWord: string | undefined;
 }
 // 若要在定义一个添加文章内容的类，则在DB类中需要再重复声明一个类似的添加数据库逻辑的方法
-class Articla{
+class Article{
     title: string | undefined;
     desc: string | undefined;
     status: number | undefined;
@@ -53,7 +53,7 @@ class MySqlDB{
         console.log(user);
         return true;
     }
-    addArticle(article: Articla): boolean{
+    addArticle(article: Article): boolean{
         console.log(article);
         return true;
     }
@@ -64,7 +64,7 @@ user1.passWord = "12345";
 let DB = new MySqlDB();
 DB.addUser(user1);
 
-let article = new Articla();
+let article = new Article();
 article.title = "马云掉了100万！";
 article.desc = "国内新闻";
 article.status = 1;

@@ -44,10 +44,10 @@ var User = /** @class */ (function () {
     return User;
 }());
 // 若要在定义一个添加文章内容的类，则在DB类中需要再重复声明一个类似的添加数据库逻辑的方法
-var Articla = /** @class */ (function () {
-    function Articla() {
+var Article = /** @class */ (function () {
+    function Article() {
     }
-    return Articla;
+    return Article;
 }());
 var MySqlDB = /** @class */ (function () {
     function MySqlDB() {
@@ -67,7 +67,7 @@ user1.userName = "张三";
 user1.passWord = "12345";
 var DB = new MySqlDB();
 DB.addUser(user1);
-var article = new Articla();
+var article = new Article();
 article.title = "马云掉了100万！";
 article.desc = "国内新闻";
 article.status = 1;
