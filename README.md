@@ -956,3 +956,181 @@
         ```  
 
     - 命名空间和模块的区别：命名空间：内部模块，主要用于组织代码，避免命名冲突。模块：ts的外部模块的简称，侧重代码的复用，一个模块里可能会有多个命名空间。
+
+7. TypeScript中的装饰器
+    - 装饰器是一种特殊类型的声明，它能偶被附加到类声明、方法、属性或参数上，可以修改类的行为。通俗的讲装饰器就是一个方法，可以注入到类、方法、属性参数上来扩展类、属性、方法，参数的功能。  
+    - 常见的装饰器：类装饰器、属性装饰器、方法装饰器、参数装饰器。根据装饰器的写法可以分为：普通装饰器(无法传参)，装饰器工厂(可传参)。装饰器是过去几年中js最大的成就之一，已是ES7的标准特性之一。  
+    - 类装饰器：类装饰器在类声明之前被声明(仅靠着类声明)。类装饰器应用于类构造函数，可以用来监视、修改或替换类定义。  
+      (1) 普通类装饰器，无法传参  
+
+      ``` TypeScript
+        function logClass(params: any){
+            console.log(params); // params就指向了当前的类
+            // 可以通过prototype属性来扩展类上的属性和方法，prototype是原型链
+            params.prototype.apiUrl = "localhost://207107:";
+            params.prototype.run = function (): void{
+                console.log("我是扩展的run方法");
+            }
+        }
+        // 使用@符号来用装饰器
+        @logClass
+        class HttpClient{
+            constructor(){
+            }
+            getData() {
+            }
+        }
+        // 实例化HttpClient类
+        let http: any = new HttpClient();
+        console.log(http.apiUrl);
+        http.run();
+      ```  
+
+      (2) 装起工厂类装饰器，可以传递参数  
+
+        ``` TypeScript
+          function logClass(params: string) {
+              return function (target: any): void {
+                  console.log(target); // target指向装饰的类
+                  console.log(params); // params为当前传递的参数
+                  // 通过修饰器工厂传递参数之后就可以通过参数来进行不同的操作
+                  target.prototype.apiUrl = params;
+              }
+          }
+          // 在装饰类的时候传递参数
+          @logClass("http://localhost:3000/data")
+          class HttpClient{
+              constructor() {
+              }
+              getData() {
+              }
+          }
+          let http: any = new HttpClient();
+          console.log(http);
+          console.log(http.apiUrl);
+        ```  
+
+      (3) 通过类装饰器重载类的构造函数和方法；类装饰器表达式会在运行时当作函数被调用，类的构造函数作为其唯一的参数；如果类装饰器返回一个值，他会使用提供的构造函数来替换类的声明。  
+
+      ``` TypeScript
+        function decoratorClass(target: any) {
+            console.log(target);
+            // 重载构造函数和方法
+            return class extends target{
+                type: any = "我是修改后的type";
+                getInfo() {
+                    console.log(this.type + "-----");
+                }
+            }
+        }
+
+        @decoratorClass
+        class Animal{
+            type: string | undefined;
+            constructor() {
+                this.type = "我是构造函数里面的type";
+            }
+            getInfo(): void {
+                console.log(this.type);
+            }
+        }
+        let animal = new Animal();
+        animal.getInfo();
+      ```
+
+    - 属性装饰器  
+      (1) 属性装饰器表达式会在运行时当作函数被调用，传入下列两个参数：第一个参数：对于静态成员来说是类的构造函数，对于实例成员是类的原型对象。 第二个参数：成员的名字。  
+      (2) 实例：
+
+        ``` TypeScript
+          // 属性装饰器
+          function propertyDecorator(params: any) {
+              if (params === "instance") {
+                  return function (target: any, attr: string): void{
+                      console.log(params); // 传递的参数
+                      console.log(target); // 当前是实例成员的属性，所以target指向类的原型对象prototype
+                      console.log(attr); // 属性名
+                      target[attr] = "修改后的name";
+                  }
+              } else {
+                  return function(target: any, attr: string): void{
+                      console.log(params); // 传递的参数
+                      console.log(target); // 当前是静态成员的属性，所以target指向类的构造函数
+                      console.log(attr); // 属性名
+                      target[attr] = "动物";
+                  }
+              }
+          }
+          class Person{
+              // 使用属性装饰器 修饰实例属性
+              @propertyDecorator("instance")
+              name: string | undefined;
+              // 使用属性装饰器 修饰静态属性
+              @propertyDecorator("static")
+              static type: "动物";
+              constructor() {
+              }
+              getInfo() {
+                  console.log(this.name);
+              }
+          }
+          let p = new Person();
+          console.log(p.name);
+          console.log(Person.type);
+        ```
+
+    - 方法装饰器：
+      (1) 方法装饰器会被应用到方法的属性描述符上，可以用来监视、修改或者替换方法的定义。  
+      (2) 方法装饰会在运行时传入下列三个参数：第一个参数：对于静态成员来说是类的构造函数，对于实例成员是类的原型对象；第二个参数：成员的名字；第三个参数：成员的属性描述符，其中value属性指向该方法。由此可以使用第一个参数来扩展类的属性和方法，可以通过第二个参数来修改原方法。  
+
+        ``` TypeScript
+          // 装饰器
+          function get(params: string) {
+              if (params === "普通"){
+                  return function (target: any, methodName: string, desc: any) {
+                      console.log(target); // 实例方法指向原型对象
+                      console.log(methodName); // 当前装饰方法的名称
+                      console.log(desc); // 方法描述，其中value属性就是当前装饰的方法 
+                      // 1.利用方法装饰器中的第一个参数来扩展类属性和方法
+                      target.apiUrl = "http://localhost:8080";
+                      target.run = function () {
+                          console.log("我是扩展的run方法");
+                      }
+                  }
+              } else {
+                  return function (target: any, methodName: string, desc: any) {
+                      // 2.利用desc的value属性修改类中方法
+                      // 2.1.保存当前的方法
+                      var oldMethod = desc.value;
+                      // 2.2.修改方法
+                      desc.value = function (...args: any[]) {
+                          args = args.map((item: any) => {  // 遍历参数列表，将所有参数转换为字符串
+                              return String(item);
+                          });
+                          console.log(args);
+                          // 2.3使用对象冒充的方式来修改方法
+                          oldMethod.apply(this, args);
+                      }
+                  }
+              }
+          }
+          class HttpClient{
+              url: string | undefined;
+              constructor(){
+              }
+              @get("普通")
+              getData() {
+                  console.log(this.url);
+              }
+              @get("修改方法")
+              getInfo(...args: any[]) {
+                  console.log(args);
+                  console.log("我是getInfo方法");
+              }
+          }
+          let http: any = new HttpClient();
+          console.log(http.apiUrl);
+          http.run();
+          console.log("--");
+          http.getInfo(123, true, "111dd"); // 执行装饰器修改的方法
+        ```
