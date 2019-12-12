@@ -1012,31 +1012,31 @@
 
       (3) 通过类装饰器重载类的构造函数和方法；类装饰器表达式会在运行时当作函数被调用，类的构造函数作为其唯一的参数；如果类装饰器返回一个值，他会使用提供的构造函数来替换类的声明。  
 
-      ``` TypeScript
-        function decoratorClass(target: any) {
-            console.log(target);
-            // 重载构造函数和方法
-            return class extends target{
-                type: any = "我是修改后的type";
-                getInfo() {
-                    console.log(this.type + "-----");
-                }
-            }
-        }
+        ``` TypeScript
+          function decoratorClass(target: any) {
+              console.log(target);
+              // 重载构造函数和方法
+              return class extends target{
+                  type: any = "我是修改后的type";
+                  getInfo() {
+                      console.log(this.type + "-----");
+                  }
+              }
+          }
 
-        @decoratorClass
-        class Animal{
-            type: string | undefined;
-            constructor() {
-                this.type = "我是构造函数里面的type";
-            }
-            getInfo(): void {
-                console.log(this.type);
-            }
-        }
-        let animal = new Animal();
-        animal.getInfo();
-      ```
+          @decoratorClass
+          class Animal{
+              type: string | undefined;
+              constructor() {
+                  this.type = "我是构造函数里面的type";
+              }
+              getInfo(): void {
+                  console.log(this.type);
+              }
+          }
+          let animal = new Animal();
+          animal.getInfo();
+        ```
 
     - 属性装饰器  
       (1) 属性装饰器表达式会在运行时当作函数被调用，传入下列两个参数：第一个参数：对于静态成员来说是类的构造函数，对于实例成员是类的原型对象。 第二个参数：成员的名字。  
@@ -1134,3 +1134,37 @@
           console.log("--");
           http.getInfo(123, true, "111dd"); // 执行装饰器修改的方法
         ```
+
+    - 方法参数装饰器  
+      (1) 方法参数装饰器：方法参数装饰器表达式会在运行时当作函数被调用，可以使用参数装饰器为类的原型只能加一些元素数据。  
+      (2) 方法参数装饰器执行时，传入以下三个参数：第一个参数：对于静态成员来说是类的构造函数，对于实例成员是类的原型对象；第二个参数：方法的名称；第三个参数：参数在函数参数列表中的索引。  
+      (3) 实例：  
+
+      ``` TypeScript
+        // 定义一个装饰器
+        function paramsDecorator(params: any) {
+            return function (target: any, methodName: any, paramsIndex: number) {
+                console.log(params); // 调用装饰器时传递的参数
+                console.log(target);  // 对于静态成员来说是类的构造函数，对于实例成员是类的原型对象
+                console.log(methodName); // 方法的名称
+                console.log(paramsIndex); // 方法参数在参数列表中的索引
+
+                // 可以通过taget参数来扩展类的属性和方法
+                target.addAttr = params;
+            }
+        }
+        class Animal{
+            type: string | undefined;
+            constructor() {
+            }
+            // 方法参数装饰器与其他装饰器类似，只需要在参数前面加上@装饰器的名称即可
+            eat(@paramsDecorator("扩展的属性") food: string):void {
+                console.log("吃" + food);
+            }
+        }
+        let an: any = new Animal();
+        an.eat("食物");
+        console.log(an.addAttr);
+      ```  
+
+    - 类装饰器、属性装饰器、方法装饰器、方法参数装饰器的执行顺序：属性装饰器 > 方法装饰器 > 方法参数装饰器 > 类装饰器；多个同类型的装饰器会从后往前执行。
